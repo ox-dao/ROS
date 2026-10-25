@@ -60,7 +60,7 @@ namespace OX.Tablet
             this.timer1.Enabled = true;
             this.timer1.Interval = 500;
             BlockIndex.BlockIndexed += BlockIndex_BlockIndexed;
-            this.Text = UIHelper.LocalString($"OX 生态   {VersionHelper.Version}", $"OX Eco   {VersionHelper.Version}");
+            this.Text = UIHelper.LocalString($"OX-DAO   {VersionHelper.Version}", $"OX-DAO   {VersionHelper.Version}");
             this.lb_msg.Text = UIHelper.LocalString("状态消息", "state message");
             TabletPluginHelper.LoadModules();
             TabletPluginHelper.LoadPlugins();
@@ -305,7 +305,7 @@ namespace OX.Tablet
             var dmbs = FlashMessageHelper.GetDomain(SecureHelper.MasterAccount.ScriptHash);
             if (dmbs.IsNotNullAndEmpty())
             {
-                this.Text = $" {UIHelper.LocalString("OX 生态", "OX Eco")} ({System.Text.Encoding.UTF8.GetString(dmbs)})   {VersionHelper.Version}";
+                this.Text = $" {UIHelper.LocalString("OX-DAO", "OX-DAO")} ({System.Text.Encoding.UTF8.GetString(dmbs)})   {VersionHelper.Version}";
             }
         }
         void ReloadOnePage()

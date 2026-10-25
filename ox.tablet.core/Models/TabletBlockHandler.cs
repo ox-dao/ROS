@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Policy;
 
 namespace OX.Tablet
 {
@@ -110,7 +111,11 @@ namespace OX.Tablet
             {
                 seeds = collectSeeds.Union(seeds).ToArray();
             }
-
+            var githubSeeds = getGithubSeeds().Result;
+            if (githubSeeds.IsNotNullAndEmpty())
+            {
+                seeds = githubSeeds.Union(seeds).ToArray();
+            }
             ProtocolSettings.InitSeed(seeds, Settings.Default.P2P.OnlySeed);
             LevelDBStore store = default;
             try
@@ -129,7 +134,14 @@ namespace OX.Tablet
             var oxsystem = new OXSystem(store);
             return oxsystem.ActorSystem.ActorOf(Akka.Actor.Props.Create(() => new TabletBlockHandler(oxsystem)));
         }
-
+        static async Task<string[]> getGithubSeeds()
+        {
+            HttpClient _http = new HttpClient();
+            var fullUrl = $"https://raw.githubusercontent.com/ox-dao/ROS/refs/heads/master/nodes.json";
+            var resp = await _http.GetAsync(fullUrl);
+            var json = await resp.Content.ReadAsStringAsync();
+            return System.Text.Json.JsonSerializer.Deserialize<string[]>(json);
+        }
         public override void OnStart()
         {
             this.oxsystem.StartNode(Settings.Default.P2P.Port, Settings.Default.P2P.WsPort, 0);

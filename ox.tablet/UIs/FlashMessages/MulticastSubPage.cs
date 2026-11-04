@@ -178,29 +178,35 @@ namespace OX.Tablet.FlashMessages
                 {
                     var infoResult = dialog.GetLineInfo();
                     var subBlockIndex = SecureHelper.BlockIndex.GetSubBlockIndex<FlashBlockIndex>();
-                    var keys = infoResult.sharekey.HexToBytes();
-                    var utlvResult = subBlockIndex.SaveMulticastTalkLine(SecureHelper.MasterAccount.ScriptHash, keys!, infoResult.lineName, 0);
-
-                    MulticastChatbox box = default;
-                    foreach (MulticastChatbox item in this.lb_contact.Items)
+                    try
                     {
-                        if (item.chatbox_info.TP.Item1 == utlvResult.talkline)
+                        var keys = infoResult.sharekey.HexToBytes();
+                        var utlvResult = subBlockIndex.SaveMulticastTalkLine(SecureHelper.MasterAccount.ScriptHash, keys!, infoResult.lineName, 0);
+
+                        MulticastChatbox box = default;
+                        foreach (MulticastChatbox item in this.lb_contact.Items)
                         {
-                            box = item;
+                            if (item.chatbox_info.TP.Item1 == utlvResult.talkline)
+                            {
+                                box = item;
+                            }
                         }
+                        if (box.IsNull())
+                        {
+                            box = buildBox(utlvResult.talkline, utlvResult.utlv);
+                            this.lb_contact.Items.Add(box);
+                        }
+                        if (this.currentchatbox.IsNotNull())
+                            this.chatboxes[this.currentchatbox.chatbox_info.TP.Item1] = this.currentchatbox;
+                        this.currentchatbox = box;
+                        this.CastPanel.Controls.Clear();
+                        this.CastPanel.Controls.Add(currentchatbox);
+                        currentchatbox.ReloadOldRecords();
                     }
-                    if (box.IsNull())
+                    catch (Exception ex)
                     {
-                        box = buildBox(utlvResult.talkline, utlvResult.utlv);
-                        this.lb_contact.Items.Add(box);
+                        UIMessageBox.ShowError(UIHelper.LocalString("创建群聊失败，可能是密钥格式错误", "Failed to create multicast chat, possibly due to incorrect key format"));
                     }
-                    if (this.currentchatbox.IsNotNull())
-                        this.chatboxes[this.currentchatbox.chatbox_info.TP.Item1] = this.currentchatbox;
-                    this.currentchatbox = box;
-                    this.CastPanel.Controls.Clear();
-                    this.CastPanel.Controls.Add(currentchatbox);
-                    currentchatbox.ReloadOldRecords();
-
                 }
             }
 
@@ -237,7 +243,7 @@ namespace OX.Tablet.FlashMessages
         {
             ToolStripMenuItem ToolStripMenuItem = sender as ToolStripMenuItem;
             var box = ToolStripMenuItem.Tag as MulticastChatbox;
-            if (box.IsNotNull()&&box.chatbox_info.IsNotNull())
+            if (box.IsNotNull() && box.chatbox_info.IsNotNull())
             {
                 var talkline = box.chatbox_info.TP.Item1;
                 //var utlv = box.chatbox_info.TP.Item2;

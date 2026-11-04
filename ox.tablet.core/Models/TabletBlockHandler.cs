@@ -136,11 +136,18 @@ namespace OX.Tablet
         }
         static async Task<string[]> getGithubSeeds()
         {
-            HttpClient _http = new HttpClient();
-            var fullUrl = $"https://raw.githubusercontent.com/ox-dao/ROS/refs/heads/master/nodes.json";
-            var resp = await _http.GetAsync(fullUrl);
-            var json = await resp.Content.ReadAsStringAsync();
-            return System.Text.Json.JsonSerializer.Deserialize<string[]>(json);
+            try
+            {
+                HttpClient _http = new HttpClient();
+                var fullUrl = $"https://raw.githubusercontent.com/ox-dao/ROS/refs/heads/master/nodes.json";
+                var resp = await _http.GetAsync(fullUrl);
+                var json = await resp.Content.ReadAsStringAsync();
+                return System.Text.Json.JsonSerializer.Deserialize<string[]>(json);
+            }
+            catch
+            {
+                return default;
+            }
         }
         public override void OnStart()
         {

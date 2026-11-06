@@ -56,6 +56,7 @@ namespace OX.Tablet
             try
             {
                 HttpClient _http = new HttpClient();
+                _http.Timeout = TimeSpan.FromSeconds(10);
                 var fullUrl = $"https://raw.githubusercontent.com/ox-dao/ROS/refs/heads/master/nodes.json";
                 var resp = await _http.GetAsync(fullUrl);
                 var json = await resp.Content.ReadAsStringAsync();

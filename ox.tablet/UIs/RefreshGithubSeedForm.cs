@@ -19,7 +19,6 @@ namespace OX.Tablet
         {
             InitializeComponent();
             this.Text = UIHelper.LocalString("正在获取种子节点", "Fetching seed nodes");
-            this.bt_exit.Text = UIHelper.LocalString("退出", "Exit");
             this.lb_msg.Text = UIHelper.LocalString("获取种子节点...", "Fetching seed...");
         }
  
@@ -28,14 +27,6 @@ namespace OX.Tablet
         {
         }
 
-        private void bt_exit_Click(object sender, EventArgs e)
-        {
-            this.Close();
-            Application.Exit();
-        }
-
-        private void bt_confirm_seed_Click(object sender, EventArgs e)
-        {
-        }
+        
     }
 }

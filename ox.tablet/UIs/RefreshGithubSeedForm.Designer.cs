@@ -29,27 +29,14 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RefreshGithubSeedForm));
-            bt_exit = new Sunny.UI.UIButton();
             lb_msg = new Sunny.UI.UILabel();
             SuspendLayout();
-            // 
-            // bt_exit
-            // 
-            bt_exit.Font = new Font("微软雅黑", 12F);
-            bt_exit.Location = new Point(301, 165);
-            bt_exit.MinimumSize = new Size(1, 1);
-            bt_exit.Name = "bt_exit";
-            bt_exit.Size = new Size(196, 52);
-            bt_exit.TabIndex = 3;
-            bt_exit.Text = "uiButton1";
-            bt_exit.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            bt_exit.Click += bt_exit_Click;
             // 
             // lb_msg
             // 
             lb_msg.Font = new Font("微软雅黑", 12F);
             lb_msg.ForeColor = Color.White;
-            lb_msg.Location = new Point(113, 89);
+            lb_msg.Location = new Point(100, 100);
             lb_msg.Name = "lb_msg";
             lb_msg.Size = new Size(328, 34);
             lb_msg.TabIndex = 5;
@@ -62,7 +49,6 @@
             ClientSize = new Size(533, 239);
             ControlBox = false;
             Controls.Add(lb_msg);
-            Controls.Add(bt_exit);
             FormBorderStyle = FormBorderStyle.None;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
@@ -70,7 +56,7 @@
             MinimizeBox = false;
             Name = "RefreshGithubSeedForm";
             ShowIcon = false;
-            StartPosition = FormStartPosition.CenterParent;
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "UnlockAccountForm";
             TopMost = true;
             FormClosing += UnlockAccountForm_FormClosing;
@@ -78,7 +64,6 @@
         }
 
         #endregion
-        private Sunny.UI.UIButton bt_exit;
         private Sunny.UI.UILabel lb_msg;
     }
 }

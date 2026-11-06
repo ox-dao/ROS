@@ -15,6 +15,7 @@ namespace OX.Tablet
         static bool createNew;
         public static IActorRef BlockHandler;
         public static MainForm MainForm;
+        public static RefreshGithubSeedForm gitHubForm = default;
         //public static BlockIndex BlockIndex;
         [STAThread]
         static void Main()
@@ -27,7 +28,16 @@ namespace OX.Tablet
                     Application.SetHighDpiMode(HighDpiMode.SystemAware);
                     Application.EnableVisualStyles();
                     Application.SetCompatibleTextRenderingDefault(false);
-
+                    gitHubForm = new RefreshGithubSeedForm();
+                    gitHubForm.Show();
+                    System.Threading.Tasks.Task.Run(async () =>
+                    {
+                        var githubSeeds = await getGithubSeeds();
+                        if (githubSeeds.IsNotNullAndEmpty())
+                        {
+                            TabletBlockHandler.GithubSeeds = githubSeeds;
+                        }
+                    }).Wait();
                     BlockHandler = TabletBlockHandler.Instance;
                     Application.Run(MainForm = MainForm.Instance);
                     MainForm.Instance.FormClosing += MainForm_FormClosing;
@@ -41,7 +51,21 @@ namespace OX.Tablet
             }
 
         }
-
+        static async Task<string[]> getGithubSeeds()
+        {
+            try
+            {
+                HttpClient _http = new HttpClient();
+                var fullUrl = $"https://raw.githubusercontent.com/ox-dao/ROS/refs/heads/master/nodes.json";
+                var resp = await _http.GetAsync(fullUrl);
+                var json = await resp.Content.ReadAsStringAsync();
+                return System.Text.Json.JsonSerializer.Deserialize<string[]>(json);
+            }
+            catch
+            {
+                return default;
+            }
+        }
         private static void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
 

@@ -424,6 +424,9 @@
 		<Compile Update="UIs\BackupPrivateKeyForm.cs">
 			<SubType>Form</SubType>
 		</Compile>
+		<Compile Update="UIs\RefreshGithubSeedForm.cs">
+		  <SubType>Form</SubType>
+		</Compile>
 		<Compile Update="UIs\UnlockAppForm.cs">
 		  <SubType>Form</SubType>
 		</Compile>

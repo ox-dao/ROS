@@ -14,7 +14,7 @@ namespace OX.Tablet
         /// 第三位：修订号，修复bug时更改
         /// 第四位：编译号，编译时更改
         /// </summary>
-        public const string Version = "1.0.0.9";
+        public const string Version = "1.0.1.0";
         public static string GetDataVersion()
         {
             var vs = Version.Split('.');

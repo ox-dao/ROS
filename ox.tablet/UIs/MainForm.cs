@@ -286,6 +286,10 @@ namespace OX.Tablet
         }
         private void MainForm_Load(object sender, EventArgs e)
         {
+            Program.gitHubForm.DoInvoke(() =>
+             {
+                 Program.gitHubForm.Close();
+             });
             ReloadOnePage();
             if (!SecureHelper.IsAuthenticated)
             {
@@ -323,7 +327,7 @@ namespace OX.Tablet
             flashMessagePage = new PageTreeNode<FlashMessagePage>(UIHelper.LocalString("闪信", "Flash"));
             this.MainMenu.Nodes.Add(flashMessagePage);
             flashMessagePage.FocusPage(false);
-          
+
 
             if (SecureHelper.IsSeniorRunMode)
             {
@@ -346,9 +350,9 @@ namespace OX.Tablet
                 this.MainMenu.Nodes.Add(EatSmallNode);
                 var BuryNode = new PageTreeNode<BuryMainPage>(UIHelper.LocalString("爆雷", "Bury"));
                 this.MainMenu.Nodes.Add(BuryNode);
-               
+
             }
-          
+
 
             var AssetNode = new PageTreeNode<AssetManagePage>(UIHelper.LocalString("资产", "Assets"));
             this.MainMenu.Nodes.Add(AssetNode);
@@ -380,7 +384,7 @@ namespace OX.Tablet
             {
                 if (ptn is PageTreeNode<FlashMessagePage> flashNode)
                 {
-                    this.SetNodeIcon(flashNode,-1);
+                    this.SetNodeIcon(flashNode, -1);
                 }
                 try
                 {

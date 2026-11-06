@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Security.Policy;
 
 namespace OX.Tablet
@@ -79,6 +80,7 @@ namespace OX.Tablet
     }
     public class TabletBlockHandler : BaseTabletBlockHandler
     {
+        public static string[] GithubSeeds { get; set; } = Array.Empty<string>();
         public static event BlockChainHandler<Block> SyncBlocksCompleted;
         public static event BlockChainHandler<Block> BlockCompleted;
         public static event BlockChainHandler<FlashMessage> FlashMessageCaptured;
@@ -110,12 +112,8 @@ namespace OX.Tablet
             if (collectSeeds != default && collectSeeds.Length > 0)
             {
                 seeds = collectSeeds.Union(seeds).ToArray();
-            }
-            var githubSeeds = getGithubSeeds().Result;
-            if (githubSeeds.IsNotNullAndEmpty())
-            {
-                seeds = githubSeeds.Union(seeds).ToArray();
-            }
+            }            
+            seeds = GithubSeeds.Union(seeds).ToArray();
             ProtocolSettings.InitSeed(seeds, Settings.Default.P2P.OnlySeed);
             LevelDBStore store = default;
             try
@@ -134,21 +132,7 @@ namespace OX.Tablet
             var oxsystem = new OXSystem(store);
             return oxsystem.ActorSystem.ActorOf(Akka.Actor.Props.Create(() => new TabletBlockHandler(oxsystem)));
         }
-        static async Task<string[]> getGithubSeeds()
-        {
-            try
-            {
-                HttpClient _http = new HttpClient();
-                var fullUrl = $"https://raw.githubusercontent.com/ox-dao/ROS/refs/heads/master/nodes.json";
-                var resp = await _http.GetAsync(fullUrl);
-                var json = await resp.Content.ReadAsStringAsync();
-                return System.Text.Json.JsonSerializer.Deserialize<string[]>(json);
-            }
-            catch
-            {
-                return default;
-            }
-        }
+       
         public override void OnStart()
         {
             this.oxsystem.StartNode(Settings.Default.P2P.Port, Settings.Default.P2P.WsPort, 0);
